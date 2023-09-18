@@ -10,12 +10,10 @@ const con = require('./util/database');
 const expenseRoute = require('./routes/expense');
 
 const Expense = require('./models/expense');
-
+const User = require('./models/user');
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
-
-
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
@@ -30,6 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(expenseRoute);
 app.use(errorController.get404);
 
+Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Expense);
 con
     .sync()
     .then((result) => {

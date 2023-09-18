@@ -1,4 +1,24 @@
 const Expense = require('../models/expense');
+const User = require('../models/user');
+
+exports.addNewUser = (req, res, next) => {
+    const user = req.body;
+    console.log(user.email);
+    console.log(user.password);
+    const uName = user.name;
+    const uEmail = user.email;
+    const uPass = user.password;
+    User
+        .create({
+            name: uName,
+            email: uEmail,
+            password: uPass
+        })
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err => console.log(err));
+}
 
 exports.fetchAllExpenses = (req, res, next) => {
     Expense.
