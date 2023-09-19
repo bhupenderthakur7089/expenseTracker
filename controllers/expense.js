@@ -3,21 +3,31 @@ const User = require('../models/user');
 
 exports.addNewUser = (req, res, next) => {
     const user = req.body;
-    console.log(user.email);
-    console.log(user.password);
     const uName = user.name;
     const uEmail = user.email;
     const uPass = user.password;
     User
-        .create({
-            name: uName,
-            email: uEmail,
-            password: uPass
+        .findAll({ where: { email: uEmail } })
+        .then(user => {
+            console.log(user[0]);
+            if (user[0]) {
+                console.log('User Already Exists');
+                res.json({ userExists: true });
+            } else {
+                console.log('User Do not Exists');
+                User
+                    .create({
+                        name: uName,
+                        email: uEmail,
+                        password: uPass
+                    })
+                    .then(result => {
+                        res.json({ userExists: false });
+                    })
+                    .catch(err => console.log(err));
+            }
         })
-        .then(result => {
-            res.json(result);
-        })
-        .catch(err => console.log(err));
+
 }
 
 exports.fetchAllExpenses = (req, res, next) => {

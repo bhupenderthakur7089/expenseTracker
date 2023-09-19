@@ -30,6 +30,7 @@ app.use(errorController.get404);
 
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Expense);
+
 con
     .sync()
     .then((result) => {

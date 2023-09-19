@@ -41,6 +41,9 @@
                 <h2 class="mb-2">Sign Up</h2>
                 <hr>
                 <form class="mt-4" id="signup">
+                    <div id="alert">
+
+                    </div>
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" name="name" id="name" placeholder="Enter your name">
@@ -51,8 +54,10 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password">
+                        <input type="password" class="form-control" name="password" id="password"
+                            placeholder="Enter your password">
                     </div>
+
                     <div class="text-center mt-3">
                         <button type="submit" class="btn btn-primary">Sign Up</button>
                     </div>
@@ -72,11 +77,20 @@
                     email,
                     password
                 }
-                console.log(user);
                 axios
                     .post("http://localhost:3000/registerUser", user)
                     .then(res => {
-                        alert('User Registration Successfull');
+                        console.log(res.data.userExists);
+                        if (res.data.userExists == true) {
+                            let div = document.getElementById('alert');
+                            let p = document.createElement('p');
+                            p.classList = 'bg-danger-subtle';
+                            p.innerHTML = 'User Already Exists with the Email ID';
+                            div.appendChild(p);
+                        } else {
+                            alert('User Registered Successfully...Proceed to login');
+                            window.location.href = 'login.html';
+                        }
                     });
             });
         </script>
