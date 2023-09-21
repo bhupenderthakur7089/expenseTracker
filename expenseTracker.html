@@ -21,19 +21,20 @@
         </div>
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" id="selected" href="expenseTracker.html">Home</a>
+                <a href="expenseTracker.html" class="nav-link" id="selected">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="login.html">Login</a>
+                <a href="login.html" class="nav-link"
+                    onclick="alert('You have been Logged Out successfully')">Logout</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="signUp.html">Sign Up</a>
+                <a href="signUp.html" class="nav-link">Sign Up</a>
             </li>
         </ul>
     </nav>
 
     <div class="container mt-5">
-        <h5 class="text-center">Please enter the following details</h5>
+        <h5 class="text-center">Daily Expense Form</h5>
         <div id="msg"></div>
         <div class="row">
             <div class="col"></div>
@@ -42,20 +43,21 @@
                     <label for="amount" class="form-label m">Expense Amount</label>
                     <div class="input-group">
                         <div class="input-group-text mb-3">$</div>
-                        <input type="number" class="form-control mb-3" name="amount" id="amount" placeholder="10000">
+                        <input type="number" class="form-control mb-3" name="amount" id="amount" placeholder="10000"
+                            required>
                     </div>
                     <div class="form-floating">
                         <input type="text" class="form-control mb-3" name="description" id="description"
-                            placeholder="for fuel">
+                            placeholder="for fuel" required>
                         <label for="description" class="form-label">Description for the Expense</label>
                     </div>
                     <label for="category" class="form-label">Category</label>
-                    <select name="category" id="category" class="form-select mb-3">
+                    <select name="category" id="category" class="form-select mb-3" required>
                         <option value="fuel">Fuel</option>
                         <option value="Grocery">Grocery</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Internet Bill">Internet Bill</option>
-                        <option value="Others">Others</option>
+                        <option value="Shopping">Online Shopping</option>
+                        <option value="Internet Bill">Bill</option>
+                        <option value="Others">Market</option>
                     </select>
                     <input type="submit" class="form-control" id="submitbtn" value="Add Expense">
                 </form>
@@ -136,7 +138,6 @@
                 .then(res => {
                     items.removeChild(list);
                 })
-            // localStorage.removeItem(listName);
             items.removeChild(list);
         }
 
@@ -152,8 +153,6 @@
                     form.description.value = res.data.description;
                     form.category.value = res.data.category;
                 })
-            // let expense = JSON.parse(localStorage.getItem(listName));
-            // localStorage.removeItem(listName);
         }
     </script>
     </div>

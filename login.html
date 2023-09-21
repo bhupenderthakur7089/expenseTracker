@@ -21,9 +21,7 @@
             <h3 class="navbar-brand">Expense Tracker App</h3>
         </div>
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="expenseTracker.html">Home</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" id="selected" href="login.html">Login</a>
             </li>
@@ -72,14 +70,15 @@
                 .then(res => {
                     if (res.data.loginStatus == true) {
                         alert('login successful');
+                        window.location.href = 'expenseTracker.html';
                     } else if (res.data.loginStatus == false) {
                         let div = document.getElementById('alert');
-                        div.innerHTML="";
+                        div.innerHTML = "";
                         let p = document.createElement('p');
                         p.classList = 'bg-danger-subtle';
                         p.innerHTML = 'Wrong Password. Please Enter the Password again...';
                         div.appendChild(p);
-                    } else if (res.data.loginStatus == 'User Not Found'){
+                    } else if (res.data.loginStatus == 'User Not Found') {
                         alert(res.data.loginStatus);
                     }
                 })

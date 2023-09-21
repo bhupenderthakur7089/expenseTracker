@@ -37,7 +37,6 @@ exports.login = (req, res, next) => {
     const uEmail = credentials.email;
     const uPass = credentials.password;
     console.log(uEmail, uPass);
-
     User
         .findAll({ where: { email: uEmail } })
         .then(user => {
