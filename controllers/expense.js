@@ -1,6 +1,8 @@
 const Expense = require('../models/expense');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 exports.signUp = (req, res) => {
     console.log(req.body);
     const user = req.body;
@@ -32,6 +34,9 @@ exports.signUp = (req, res) => {
     });
 
 }
+function generateAccessToken(id, name) {
+    return jwt.sign({ userId: id, userName: name }, 'h31k2h128dqdhdia')
+}
 exports.login = (req, res, next) => {
     const credentials = req.body;
     const uEmail = credentials.email;
@@ -47,7 +52,7 @@ exports.login = (req, res, next) => {
                     }
                     if (result === true) {
                         return res.status(200).json({
-                            loginStatus: true, message: "User logged in successfully"
+                            loginStatus: true, message: "User logged in successfully", token: generateAccessToken(user[0].id, user[0].name)
                         })
                     }
                     else if (result === false) {
@@ -64,7 +69,7 @@ exports.login = (req, res, next) => {
 }
 exports.fetchAllExpenses = (req, res, next) => {
     Expense.
-        findAll()
+        findAll({ where: { userId: req.user.id } })
         .then(expenses => {
             res.json(expenses);
         })
@@ -80,7 +85,8 @@ exports.addExpense = (req, res, next) => {
         .create({
             amount: amnt,
             description: desc,
-            category: catg
+            category: catg,
+            userId: req.user.id
         })
         .then(result => {
             console.log('Expense Added successfully...');

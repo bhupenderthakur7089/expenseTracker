@@ -73,7 +73,9 @@
     <script src="axios.min.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            axios.get("http://localhost:3000/expenses")
+            const token = localStorage.getItem('token');
+            axios
+                .get("http://localhost:3000/expenses", { headers: { "authorization": token } })
                 .then(res => {
                     for (let i = 0; i < res.data.length; i++) {
                         displayExpense(res.data[i]);
@@ -91,8 +93,9 @@
                 description,
                 category
             }
+            const token = localStorage.getItem('token');
             axios
-                .post("http://localhost:3000/addExpense", expense)
+                .post("http://localhost:3000/addExpense", expense, { headers: { "authorization": token } })
                 .then(res => {
                     console.log(res.data);
                     displayExpense(res.data);
