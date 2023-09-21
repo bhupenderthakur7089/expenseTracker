@@ -25,18 +25,17 @@
                 <a class="nav-link" href="expenseTracker.html">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="signUp.html">Sign Up</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" id="selected" href="login.html">Login</a>
             </li>
-            <!-- Add more menu items as needed -->
+            <li class="nav-item">
+                <a class="nav-link" href="signUp.html">Sign Up</a>
+            </li>
         </ul>
     </nav>
 
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <h2 class="mb-2">Login</h2>
                 <hr>
                 <form class="mt-4" id="login">
@@ -75,12 +74,13 @@
                         alert('login successful');
                     } else if (res.data.loginStatus == false) {
                         let div = document.getElementById('alert');
+                        div.innerHTML="";
                         let p = document.createElement('p');
                         p.classList = 'bg-danger-subtle';
                         p.innerHTML = 'Wrong Password. Please Enter the Password again...';
                         div.appendChild(p);
                     } else if (res.data.loginStatus == 'User Not Found'){
-                        console.log(res.data.loginStatus);
+                        alert(res.data.loginStatus);
                     }
                 })
         })

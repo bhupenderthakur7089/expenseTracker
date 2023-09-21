@@ -1,50 +1,62 @@
 const Expense = require('../models/expense');
 const User = require('../models/user');
-
-exports.addNewUser = (req, res, next) => {
+const bcrypt = require('bcrypt');
+exports.signUp = (req, res) => {
+    console.log(req.body);
     const user = req.body;
     const uName = user.name;
     const uEmail = user.email;
     const uPass = user.password;
-    User
-        .findAll({ where: { email: uEmail } })
-        .then(user => {
-            console.log(user[0]);
-            if (user[0]) {
-                console.log('User Already Exists');
-                res.json({ userExists: true });
-            } else {
-                console.log('User Do not Exists');
-                User
-                    .create({
-                        name: uName,
-                        email: uEmail,
-                        password: uPass
-                    })
-                    .then(result => {
-                        res.json({ userExists: false });
-                    })
-            }
-        })
-        .catch(err => console.log(err));
-
+    const saltRound = 10;
+    bcrypt.hash(uPass, saltRound, (err, hash) => {
+        console.log(hash);
+        User
+            .findAll({ where: { email: uEmail } })
+            .then(user => {
+                if (user.length > 0) {
+                    res.json({ userExists: true });
+                } else {
+                    User
+                        .create({
+                            name: uName,
+                            email: uEmail,
+                            password: hash
+                        })
+                        .then(result => {
+                            console.log(result);
+                            res.json({ userExists: false });
+                        })
+                }
+            })
+            .catch(err => console.log(err));
+    });
 
 }
-exports.checkLogin = (req, res, next) => {
+exports.login = (req, res, next) => {
     const credentials = req.body;
     const uEmail = credentials.email;
     const uPass = credentials.password;
     console.log(uEmail, uPass);
+
     User
         .findAll({ where: { email: uEmail } })
         .then(user => {
             if (user[0]) {
-                if (user[0].password == uPass) {
-                    console.log(user[0]);
-                    res.json({ loginStatus: true });
-                } else {
-                    res.json({ loginStatus: false });
-                }
+                bcrypt.compare(uPass, user[0].password, (err, result) => {
+                    if (err) {
+                        throw new Error('Something went wrong')
+                    }
+                    if (result === true) {
+                        return res.status(200).json({
+                            loginStatus: true, message: "User logged in successfully"
+                        })
+                    }
+                    else if (result === false) {
+                        return res.json({
+                            loginStatus: false, message: "Password is incorrect"
+                        })
+                    }
+                })
             } else {
                 res.json({ loginStatus: 'User Not Found' });
             }

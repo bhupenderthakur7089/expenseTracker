@@ -25,12 +25,11 @@
                 <a class="nav-link" href="expenseTracker.html">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="selected" href="signUp.html">Sign Up</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="login.html">Login</a>
             </li>
-            <!-- Add more menu items as needed -->
+            <li class="nav-item">
+                <a class="nav-link" id="selected" href="signUp.html">Sign Up</a>
+            </li>
         </ul>
     </nav>
 
@@ -75,7 +74,7 @@
                     password
                 }
                 axios
-                    .post("http://localhost:3000/registerUser", user)
+                    .post("http://localhost:3000/signUp", user)
                     .then(res => {
                         console.log(res.data.userExists);
                         if (res.data.userExists == true) {
