@@ -1,42 +1,46 @@
-const express = require('express');
-const app = express();
-
 const path = require('path');
-const bodyParser = require('body-parser');
-const errorController = require('./controllers/error');
 
-const con = require('./util/database');
+const express = require('express');
+var cors = require('cors');
 
-const expenseRoute = require('./routes/expense');
+const sequelize = require('./util/database');
 
-const Expense = require('./models/expense');
 const User = require('./models/user');
+const Expense = require('./models/expense');
+const Order = require('./models/orders');
 
-app.set('view engine', 'ejs');
-app.set('views', 'views');
+const userRoutes = require('./routes/user');
+const expenseRoutes = require('./routes/expense');
+const purchaseRoutes = require('./routes/purchase');
+const premiumFeatureRoutes = require('./routes/premiumFeature');
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
+const app = express();
+const dotenv = require('dotenv');
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+// get config vars
+dotenv.config();
 
-app.use(expenseRoute);
-app.use(errorController.get404);
 
-Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+app.use(cors());
+
+// app.use(bodyParser.urlencoded());  ////this is for handling forms
+app.use(express.json());  //this is for handling jsons
+
+app.use('/user', userRoutes)
+app.use('/expense', expenseRoutes)
+app.use('/purchase', purchaseRoutes)
+app.use('/premium', premiumFeatureRoutes)
+
 User.hasMany(Expense);
+Expense.belongsTo(User);
 
-con
-    .sync()
-    .then((result) => {
-        console.log(result);
+User.hasMany(Order);
+Order.belongsTo(User);
+
+sequelize.sync()
+    .then(() => {
         app.listen(3000);
     })
-    .catch(err => console.log(err));
-
+    .catch(err => {
+        console.log(err);
+    })

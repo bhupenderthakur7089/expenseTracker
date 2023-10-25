@@ -59,7 +59,8 @@
                         <option value="Internet Bill">Bill</option>
                         <option value="Others">Market</option>
                     </select>
-                    <input type="submit" class="form-control" id="submitbtn" value="Add Expense">
+                    <input type="submit" class="form-control mb-2" id="submitbtn" value="Add Expense">
+                    <input type="button" onclick="buyPremium()" class="form-control" id="buyPremiumBtn" value="Buy Premium">
                 </form>
             </div>
             <div class="col"></div>
@@ -102,6 +103,9 @@
                 });
 
         });
+        function buyPremium(){
+
+        }
         function displayExpense(expense) {
             let items = document.querySelector('#items');
             let list = document.createElement('li');
