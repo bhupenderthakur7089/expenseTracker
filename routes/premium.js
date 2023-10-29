@@ -7,6 +7,6 @@ router.get('/buyPremium', userAuthenticate.authenticate, premiumController.buyPr
 
 router.post('/updatetransactionstatus', userAuthenticate.authenticate, premiumController.updateTransactionStatus);
 
-// router.get('/showLeaderBoard', userAuthenticate.authenticate, premiumController.getUserLeaderBoard);
+router.get('/showLeaderBoard', userAuthenticate.authenticate, premiumController.getUserLeaderBoard);
 
 module.exports = router;

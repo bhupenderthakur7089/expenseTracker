@@ -9,8 +9,13 @@ const User = con.define('user', {
         primaryKey: true
     },
     name: sequelize.STRING,
-    email: sequelize.STRING,
+    email: {
+       type:  sequelize.STRING,
+       allowNull: false,
+       unique: true
+    },
     password: sequelize.STRING,
+    ispremiumuser: sequelize.BOOLEAN
 });
 
 module.exports = User;

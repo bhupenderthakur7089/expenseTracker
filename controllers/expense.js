@@ -77,7 +77,7 @@ exports.fetchAllExpenses = (req, res, next) => {
 }
 
 exports.generateAccessToken = (id, name, ispremiumuser) => {
-    return jwt.sign({ userId: id, name: name, ispremiumuser }, 'secretkey');
+    return jwt.sign({ userId: id, name: name, ispremiumuser }, 'h31k2h128dqdhdia');
 }
 
 exports.addExpense = (req, res, next) => {

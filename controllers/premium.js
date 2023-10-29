@@ -1,6 +1,8 @@
 const Razorpay = require('razorpay');
+const User = require('../models/user');
 const Order = require('../models/orders');
-const expense = require('./expense');
+const Expense = require('../models/expense');
+const sequelize = require('../util/database');
 
 exports.buyPremium = (req, res) => {
 
@@ -34,34 +36,54 @@ exports.updateTransactionStatus = (req, res) => {
             console.log(order);
             const promise1 = order.update({ paymentid: payment_id, status: 'SUCCESSFUL' });
             const promise2 = req.user.update({ ispremiumuser: true });
-            Promise.all([promise1, promise2]).then(() => {
-                return res.json({ sucess: true, message: "Transaction Successful", token: expense.generateAccessToken(userId, undefined, true) });
-            }).catch((error) => {
-                throw new Error(error)
-            })
+            Promise.all([promise1, promise2])
+                .then(() => {
+                    return res.json({ sucess: true, message: "Transaction Successful", token: Expense.generateAccessToken(userId, req.user.name, true) });
+                }).catch((error) => {
+                    throw new Error(error)
+                })
         })
         .catch(err => console.log(err));
 }
 
-const getUserLeaderBoard = async (req, res) => {
-    try {
-        const leaderboardofusers = await User.findAll({
-            attributes: ['id', 'name', [sequelize.fn('sum', sequelize.col('expenses.expenseamount')), 'total_cost']],
-            include: [
-                {
-                    model: Expense,
-                    attributes: []
-                }
-            ],
-            group: ['user.id'],
-            order: [['total_cost', 'DESC']]
-
+exports.getUserLeaderBoard = (req, res) => {
+    console.log('user id is: ', req.user.id);
+    Expense.findAll({
+        attributes: ['userId', [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount']],
+        group: ['userId'],
+        include: User,
+        order: [['totalAmount', 'DESC']]
+    })
+        .then((expenses) => {
+            // console.log('User:', req.user.name);
+            // console.log('Expenses:');
+            // expenses.forEach((expense) => {
+            //     console.log('Expense Name:', expense.description);
+            //     console.log('Amount:', expense.amount);
+            // });
+            res.json(expenses);
         })
+        .catch((error) => {
+            console.error('Error fetching expenses:', error);
+        });
 
-        res.status(200).json(leaderboardofusers)
 
-    } catch (err) {
-        console.log(err)
-        res.status(500).json(err)
-    }
+    // User.findAll({
+    //     attributes: ['id', 'name', [sequelize.fn('sum', sequelize.col('expense.amount')), 'total_cost']],
+    //     include: [
+    //         {
+    //             model: Expense,
+    //             attributes: []
+    //         }
+    //     ],
+    //     group: ['user.id'],
+    //     order: [['total_cost', 'DESC']]
+
+    // })
+    //     .then((result) => {
+    //         console.log(result);
+    //         res.json(result);
+    //     })
+    //     .catch((err) => console.log(err));
+
 }
