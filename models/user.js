@@ -10,12 +10,18 @@ const User = con.define('user', {
     },
     name: sequelize.STRING,
     email: {
-       type:  sequelize.STRING,
-       allowNull: false,
-       unique: true
+        type: sequelize.STRING,
+        allowNull: false,
+        unique: true
     },
     password: sequelize.STRING,
-    ispremiumuser: sequelize.BOOLEAN
+    ispremiumuser: sequelize.BOOLEAN,
+    totalExpense: {
+        type: sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+        unique: false
+    }
 });
 
 module.exports = User;

@@ -71,7 +71,7 @@
                     if (res.data.loginStatus == true) {
                         alert('login successful');
                         localStorage.setItem("token", res.data.token);
-                        window.location.href = 'expenseTracker.html';
+                        window.location.href = 'index.html';
                     } else if (res.data.loginStatus == false) {
                         let div = document.getElementById('alert');
                         div.innerHTML = "";

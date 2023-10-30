@@ -9,4 +9,6 @@ router.post('/updatetransactionstatus', userAuthenticate.authenticate, premiumCo
 
 router.get('/showLeaderBoard', userAuthenticate.authenticate, premiumController.getUserLeaderBoard);
 
+router.get('/checkPremium', userAuthenticate.authenticate, premiumController.checkPremium);
+
 module.exports = router;

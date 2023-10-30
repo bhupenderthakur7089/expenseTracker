@@ -94,6 +94,9 @@ exports.addExpense = (req, res, next) => {
         })
         .then(result => {
             console.log('Expense Added successfully...');
+            let total = req.user.totalExpense*1 + amnt*1;
+            console.log('userExpense is', req.user.totalExpense);
+            req.user.update({ totalExpense: total });
             res.json(result);
         })
         .catch(err => console.log(err));
