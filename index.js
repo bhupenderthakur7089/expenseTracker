@@ -94,11 +94,13 @@ function deleteList(deleteBtn) {
     let items = deleteBtn.parentElement.parentElement.parentElement.parentElement;
     let list = deleteBtn.parentElement.parentElement.parentElement;
     listName = list.name;
-    axios.get(`http://localhost:3000/deleteExpense/${listName}`)
+    const token = localStorage.getItem('token');
+    axios.get(`http://localhost:3000/deleteExpense/${listName}`, { headers: { "authorization": token } })
         .then(res => {
+            console.log(res);
             items.removeChild(list);
         })
-    items.removeChild(list);
+        .catch(err => console.log(err))
 }
 
 let form = document.querySelector('#myForm');

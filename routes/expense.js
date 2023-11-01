@@ -11,6 +11,6 @@ router.get('/expenses', userAuthenticate.authenticate, expenseController.fetchAl
 
 router.post('/addExpense', userAuthenticate.authenticate, expenseController.addExpense);
 
-router.get('/deleteExpense/:expenseId', expenseController.deleteExpense);
+router.get('/deleteExpense/:expenseId', userAuthenticate.authenticate, expenseController.deleteExpense);
 
 module.exports = router;
