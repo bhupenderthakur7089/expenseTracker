@@ -35,9 +35,11 @@ exports.signUp = (req, res) => {
     });
 
 }
+
 function generateAccessToken(id, name) {
     return jwt.sign({ userId: id, userName: name }, 'h31k2h128dqdhdia')
 }
+
 exports.login = (req, res, next) => {
     const credentials = req.body;
     const uEmail = credentials.email;

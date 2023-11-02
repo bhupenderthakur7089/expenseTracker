@@ -10,6 +10,7 @@ const con = require('./util/database');
 
 const expenseRoute = require('./routes/expense');
 const premiumRoute = require('./routes/premium');
+const user = require('./routes/user');
 
 const Expense = require('./models/expense');
 const User = require('./models/user');
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(expenseRoute);
 app.use(premiumRoute);
+app.use(user);
 app.use(errorController.get404);
 
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
@@ -36,7 +38,7 @@ Order.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Order);
 
 con
-    .sync({ force: true })
+    .sync()
     .then((result) => {
         console.log(result);
         app.listen(3000);
