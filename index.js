@@ -124,26 +124,26 @@ form.addEventListener('submit', (e) => {
 
 });
 
-function download(){
+function download() {
     console.log('hello world');
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:3000/user/download', { headers: {"authorization" : token} })
-    .then((response) => {
-        if(response.status === 201){
-            //the bcakend is essentially sending a download link
-            //  which if we open in browser, the file would download
-            var a = document.createElement("a");
-            a.href = response.data.fileUrl;
-            a.download = 'myexpense.csv';
-            a.click();
-        } else {
-            throw new Error(response.data.message)
-        }
+    axios.get('http://localhost:3000/download', { headers: { "authorization": token } })
+        .then((response) => {
+            console.log('Heloo there this is reponse');
+            console.log(response);
+            // if (response.status === 201) {
+            //     var a = document.createElement("a");
+            //     a.href = response.data.fileUrl;
+            //     a.download = 'myexpense.csv';
+            //     a.click();
+            // } else {
+            //     throw new Error(response.data.message)
+            // }
 
-    })
-    .catch((err) => {
-        showError(err)
-    });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 }
 
 window.addEventListener('DOMContentLoaded', () => {

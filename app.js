@@ -11,6 +11,7 @@ const con = require('./util/database');
 const expenseRoute = require('./routes/expense');
 const premiumRoute = require('./routes/premium');
 const password = require('./routes/password');
+const user = require('./routes/user');
 
 const Expense = require('./models/expense');
 const User = require('./models/user');
@@ -25,9 +26,10 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(user);
+app.use(password);
 app.use(expenseRoute);
 app.use(premiumRoute);
-app.use(password);
 app.use(forgotPasswordRequests);
 app.use(errorController.get404);
 
@@ -40,6 +42,7 @@ User.hasMany(Order);
 forgotPasswordRequests.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(forgotPasswordRequests);
 con
+    // { force: true }
     .sync()
     .then((result) => {
         console.log(result);
