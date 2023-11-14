@@ -103,6 +103,49 @@ function deleteList(deleteBtn) {
         .catch(err => console.log(err))
 }
 
+
+function getExpenses(page) {
+    const token = localStorage.getItem('token');
+    axios
+        .get(`http://localhost:3000/expenses/${page}`, { headers: { "authorization": token } })
+        .then(res => {
+            console.log('List of Expenses:', res);
+            let items = document.querySelector('#items');
+            items.innerHTML = '';
+
+            for (let i = 0; i < res.data.expenses.length; i++) {
+                displayExpense(res.data.expenses[i]);
+            }
+            showPageNumbers(res.data);
+        })
+}
+
+
+function showPageNumbers({ currentPage, hasNextPage, nextPage, hasPreviousPage, previousPage, lastPage }) {
+    const pagination = document.getElementById('pageNumberDiv');
+    pagination.innerHTML = '';
+    if (hasPreviousPage) {
+        const btn2 = document.createElement('button');
+        btn2.innerHTML = previousPage;
+        btn2.addEventListener('click', () => {
+            getExpenses(previousPage);
+        })
+        pagination.appendChild(btn2);
+    }
+    const btn1 = document.createElement('button');
+    btn1.innerHTML = `<h3> ${currentPage}</h3 > `;
+    btn1.addEventListener('click', () => getExpenses(currentPage))
+    pagination.appendChild(btn1);
+    if (hasNextPage) {
+        const btn3 = document.createElement('button');
+        btn3.innerHTML = previousPage;
+        btn3.addEventListener('click', () => {
+            getExpenses(nextPage);
+        })
+        pagination.appendChild(btn3);
+    }
+}
+
 let form = document.querySelector('#myForm');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -126,6 +169,7 @@ form.addEventListener('submit', (e) => {
 
 window.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
+    const page = 1;
     axios
         .get("http://localhost:3000/checkPremium", { headers: { "authorization": token } })
         .then((res) => {
@@ -136,10 +180,12 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         })
     axios
-        .get("http://localhost:3000/expenses", { headers: { "authorization": token } })
+        .get(`http://localhost:3000/expenses/${page}`, { headers: { "authorization": token } })
         .then(res => {
-            for (let i = 0; i < res.data.length; i++) {
-                displayExpense(res.data[i]);
+            console.log('List of Expenses:', res);
+            for (let i = 0; i < res.data.expenses.length; i++) {
+                displayExpense(res.data.expenses[i]);
             }
+            showPageNumbers(res.data);
         })
 })

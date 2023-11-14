@@ -35,9 +35,11 @@ exports.signUp = (req, res) => {
     });
 
 }
+
 function generateAccessToken(id, name) {
     return jwt.sign({ userId: id, userName: name }, 'h31k2h128dqdhdia')
 }
+
 exports.login = (req, res, next) => {
     const credentials = req.body;
     const uEmail = credentials.email;
@@ -68,12 +70,32 @@ exports.login = (req, res, next) => {
         })
         .catch(err => { console.log(err) });
 }
-exports.fetchAllExpenses = (req, res, next) => {
-    Expense.
-        findAll({ where: { userId: req.user.id } })
-        .then(expenses => {
-            res.json(expenses);
+exports.fetchAllExpenses = (req, res) => {
+    const pageNumber = req.params.pageNumber;
+    console.log('page number is ', pageNumber);
+    Expense.count({ where: { userId: req.user.id } })
+        .then((total) => {
+            totalExpense = total;
+            return Expense.
+                findAll({
+                    where: { userId: req.user.id },
+                    offset: (pageNumber - 1) * 2,
+                    limit: 2
+                })
+                .then(expenses => {
+                    console.log('Expenses are as follows:', expenses);
+                    res.json({
+                        expenses: expenses,
+                        currentPage: pageNumber,
+                        hasNextPage: 2 * pageNumber < totalExpense,
+                        nextPage: pageNumber*1 + 1,
+                        hasPreviousPage: pageNumber > 1,
+                        previousPage: pageNumber - 1,
+                        lastPage: Math.ceil(totalExpense / 2),
+                    });
+                })
         })
+
         .catch(err => console.log(err));
 }
 

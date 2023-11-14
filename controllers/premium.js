@@ -44,7 +44,7 @@ exports.updateTransactionStatus = (req, res) => {
 }
 
 exports.checkPremium = (req, res) => {
-    console.log('User ID is:', req.user.id);
+    // console.log('User ID is:', req.user.id);
     res.json({ data: req.user });
 }
 

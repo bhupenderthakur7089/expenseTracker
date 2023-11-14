@@ -7,7 +7,7 @@ router.post('/signUp', expenseController.signUp);
 
 router.post('/login', expenseController.login);
 
-router.get('/expenses', userAuthenticate.authenticate, expenseController.fetchAllExpenses);
+router.get('/expenses/:pageNumber', userAuthenticate.authenticate, expenseController.fetchAllExpenses);
 
 router.post('/addExpense', userAuthenticate.authenticate, expenseController.addExpense);
 
