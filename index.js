@@ -167,6 +167,28 @@ form.addEventListener('submit', (e) => {
 
 });
 
+function download() {
+    console.log('hello world');
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:3000/download', { headers: { "authorization": token } })
+        .then((response) => {
+            console.log('Heloo there this is reponse');
+            console.log(response);
+            // if (response.status === 201) {
+            //     var a = document.createElement("a");
+            //     a.href = response.data.fileUrl;
+            //     a.download = 'myexpense.csv';
+            //     a.click();
+            // } else {
+            //     throw new Error(response.data.message)
+            // }
+
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     const page = 1;

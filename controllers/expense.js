@@ -1,9 +1,8 @@
 const Expense = require('../models/expense');
-const User = require('../models/user');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const con = require('../util/database');
 
+<<<<<<< HEAD
 exports.signUp = (req, res) => {
     console.log(req.body);
     const user = req.body;
@@ -94,13 +93,16 @@ exports.fetchAllExpenses = (req, res) => {
                         lastPage: Math.ceil(totalExpense / 2),
                     });
                 })
+=======
+exports.fetchAllExpenses = (req, res, next) => {
+    Expense.
+        findAll({ where: { userId: req.user.id } })
+        .then(expenses => {
+            res.json(expenses);
+>>>>>>> f1bdaf7d25a78d6b9dff07d84bb15e7829f08adc
         })
 
         .catch(err => console.log(err));
-}
-
-exports.generateAccessToken = (id, name, ispremiumuser) => {
-    return jwt.sign({ userId: id, name: name, ispremiumuser }, 'h31k2h128dqdhdia');
 }
 
 exports.addExpense = async (req, res, next) => {
@@ -133,7 +135,8 @@ exports.deleteExpense = async (req, res, next) => {
     const expenseId = req.params.expenseId;
     const t = await con.transaction();
 
-    Expense.findAll({ where: { id: expenseId } })
+    Expense
+        .findAll({ where: { id: expenseId } })
         .then(expense => {
             expense[0].destroy({ transaction: t })
                 .then((expense) => {
@@ -160,4 +163,9 @@ exports.deleteExpense = async (req, res, next) => {
             }
         })
         .catch(err => console.log(err));
+}
+
+
+exports.generateAccessToken = (id, name, ispremiumuser) => {
+    return jwt.sign({ userId: id, name: name, ispremiumuser }, 'h31k2h128dqdhdia');
 }
