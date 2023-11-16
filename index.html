@@ -81,11 +81,17 @@
     <ul id="leaderboard" class="list-group">
 
     </ul>
-    
+
     <ul id="pageNumberDiv">
 
     </ul>
-
+    <label for="rowsPerPage">Rows Per Page</label>
+    <select name="rowsPerPage" id="rowsPerPage" onchange="changeRowCount(event)">
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
+    </select>
     <script src="axios.min.js"></script>
     <script src="index.js"></script>
 </body>

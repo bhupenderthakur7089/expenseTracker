@@ -104,15 +104,20 @@ function deleteList(deleteBtn) {
 }
 
 
-function getExpenses(page) {
+function getExpenses(page, rowsPerPage) {
     const token = localStorage.getItem('token');
     axios
-        .get(`http://localhost:3000/expenses/${page}`, { headers: { "authorization": token } })
+        .get(`http://localhost:3000/expenses`, {
+            params: {
+                pageNumber: page,
+                rowsPerPage: rowsPerPage
+            },
+            headers: { "authorization": token }
+        })
         .then(res => {
             console.log('List of Expenses:', res);
             let items = document.querySelector('#items');
             items.innerHTML = '';
-
             for (let i = 0; i < res.data.expenses.length; i++) {
                 displayExpense(res.data.expenses[i]);
             }
@@ -120,6 +125,14 @@ function getExpenses(page) {
         })
 }
 
+function changeRowCount(e) {
+    const rowsPerPage = e.target.value;
+    console.log(rowsPerPage);
+    console.log('Row Count Per Page is: ', rowsPerPage);
+    const currentPage = document.getElementById('currentPage').children[0].innerHTML;
+    console.log('current Page number is: ', currentPage);
+    getExpenses(currentPage, rowsPerPage);
+}
 
 function showPageNumbers({ currentPage, hasNextPage, nextPage, hasPreviousPage, previousPage, lastPage }) {
     const pagination = document.getElementById('pageNumberDiv');
@@ -127,24 +140,52 @@ function showPageNumbers({ currentPage, hasNextPage, nextPage, hasPreviousPage, 
     if (hasPreviousPage) {
         const btn2 = document.createElement('button');
         btn2.innerHTML = previousPage;
+        btn2.id = 'previousPage';
         btn2.addEventListener('click', () => {
-            getExpenses(previousPage);
-        })
+            getExpenses(previousPage, 2);
+        });
         pagination.appendChild(btn2);
     }
     const btn1 = document.createElement('button');
     btn1.innerHTML = `<h3> ${currentPage}</h3 > `;
-    btn1.addEventListener('click', () => getExpenses(currentPage))
+    btn1.id = 'currentPage';
+    btn1.addEventListener('click', () => {
+        getExpenses(currentPage, 2)
+    });
     pagination.appendChild(btn1);
     if (hasNextPage) {
         const btn3 = document.createElement('button');
-        btn3.innerHTML = previousPage;
+        btn3.innerHTML = nextPage;
+        btn3.id = 'nextPage';
         btn3.addEventListener('click', () => {
-            getExpenses(nextPage);
-        })
+            getExpenses(nextPage, 2);
+        });
         pagination.appendChild(btn3);
     }
 }
+
+function download() {
+    console.log('hello world');
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:3000/download', { headers: { "authorization": token } })
+        .then((response) => {
+            console.log(response.data.fileURL);
+            if (response.data.success === true) {
+                var a = document.createElement("a");
+                a.href = response.data.fileURL;
+                a.download = 'myexpense.csv';
+                a.click();
+            } else {
+                throw new Error(response.data.message)
+            }
+
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+
 
 let form = document.querySelector('#myForm');
 form.addEventListener('submit', (e) => {
@@ -167,28 +208,6 @@ form.addEventListener('submit', (e) => {
 
 });
 
-function download() {
-    console.log('hello world');
-    const token = localStorage.getItem('token');
-    axios.get('http://localhost:3000/download', { headers: { "authorization": token } })
-        .then((response) => {
-            console.log('Heloo there this is reponse');
-            console.log(response);
-            // if (response.status === 201) {
-            //     var a = document.createElement("a");
-            //     a.href = response.data.fileUrl;
-            //     a.download = 'myexpense.csv';
-            //     a.click();
-            // } else {
-            //     throw new Error(response.data.message)
-            // }
-
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-}
-
 window.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     const page = 1;
@@ -202,7 +221,13 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         })
     axios
-        .get(`http://localhost:3000/expenses/${page}`, { headers: { "authorization": token } })
+        .get(`http://localhost:3000/expenses`, {
+            params: {
+                pageNumber: 1,
+                rowsPerPage: 2
+            },
+            headers: { "authorization": token }
+        })
         .then(res => {
             console.log('List of Expenses:', res);
             for (let i = 0; i < res.data.expenses.length; i++) {

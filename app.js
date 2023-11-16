@@ -10,11 +10,8 @@ const con = require('./util/database');
 
 const expenseRoute = require('./routes/expense');
 const premiumRoute = require('./routes/premium');
-<<<<<<< HEAD
-=======
-const password = require('./routes/password');
->>>>>>> f1bdaf7d25a78d6b9dff07d84bb15e7829f08adc
 const user = require('./routes/user');
+const password = require('./routes/password');
 
 const Expense = require('./models/expense');
 const User = require('./models/user');
@@ -33,11 +30,7 @@ app.use(user);
 app.use(password);
 app.use(expenseRoute);
 app.use(premiumRoute);
-<<<<<<< HEAD
 app.use(user);
-=======
-app.use(forgotPasswordRequests);
->>>>>>> f1bdaf7d25a78d6b9dff07d84bb15e7829f08adc
 app.use(errorController.get404);
 
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
@@ -49,10 +42,6 @@ User.hasMany(Order);
 forgotPasswordRequests.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(forgotPasswordRequests);
 con
-<<<<<<< HEAD
-=======
-    // { force: true }
->>>>>>> f1bdaf7d25a78d6b9dff07d84bb15e7829f08adc
     .sync()
     .then((result) => {
         console.log(result);

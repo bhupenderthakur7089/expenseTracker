@@ -1,44 +1,3 @@
-<<<<<<< HEAD
-require('dotenv').config();
-var SibApiV3Sdk = require('sib-api-v3-sdk');
-var defaultClient = SibApiV3Sdk.ApiClient.instance;
-
-var apiKey = defaultClient.authentications['api-key'];
-apiKey.apiKey = 'xsmtpsib-4424fe5de884feb63f6cd82513b5f75a999a666f4c366410b86b063ee0a07766-j6XznWq4mhNA9fby';
-
-var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-exports.resetPassword = (req, res) => {
-
-    try {
-        sendSmtpEmail = {
-            to: [{
-                email: req.body.emailId,
-                name: 'John Doe'
-            }],
-            params: {
-                name: 'John',
-                surname: 'Doe'
-            },
-            headers: {
-                'X-Mailin-custom': 'custom_header_1:custom_value_1|custom_header_2:custom_value_2'
-            }
-        };
-
-
-        apiInstance.sendTransacEmail(sendSmtpEmail)
-            .then((data) => {
-                res.json(data)
-            })
-            .catch(err => console.log(err))
-    }
-    catch (err) {
-        console.log(err);
-    }
-
-}
-=======
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -114,42 +73,44 @@ function generateAccessToken(id, name) {
 }
 
 exports.downloadExpenses = async (req, res) => {
+    try {
+        const expenses = await Expense.findAll({ where: { userId: req.user.id } })
+        const stringifiedExpenses = JSON.stringify(expenses);
+        const fileName = `expenses${req.user.id}/${new Date()}.txt`;
+        const fileURL = await uploadToS3(stringifiedExpenses, fileName);
+        console.log('file URL is:', fileURL);
+        res.json({ fileURL, success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while processing the request.' });
+    }
 
-    await Expense.
-        findAll({ where: { userId: req.user.id } })
-        .then(expenses => {
-            console.log(expenses);
-            const stringifiedExpenses = JSON.stringify(expenses);
-            const fileName = `expenses${req.user.id}/${new Date()}.txt`;
-            const fileURL = uploadToS3(stringifiedExpenses, fileName);
-            res.json({ fileURL, success: true });
-        })
-        .catch(err => console.log(err));
-
-};
+}
 
 function uploadToS3(data, fileName) {
-    const bucketName = 'exp70188';
-    const IAM_USER_KEY = 'AKIAVMPMOSEFOCDMAB77';
-    const IAM_SECRET_KEY = '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';
-    let s3Bucket = new AWS.S3({
-        accessKeyId: IAM_USER_KEY,
-        secretAccessKey: IAM_SECRET_KEY,
-    })
-    s3Bucket.createBucket(() => {
-        var params = {
-            Bucket: bucketName,
-            Key: fileName,
-            Body: data,
-            ACL: 'public-read'
-        }
-        s3Bucket.upload(params, (err, s3reponse) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('success', s3reponse);
-            }
+    return new Promise((resolve, reject) => {
+        const bucketName = 'exp70188';
+        const IAM_USER_KEY = 'AKIAVMPMOSEFOCDMAB77';
+        const IAM_SECRET_KEY = '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';
+        let s3Bucket = new AWS.S3({
+            accessKeyId: IAM_USER_KEY,
+            secretAccessKey: IAM_SECRET_KEY,
         })
-    })
+        let fileURL = '';
+        s3Bucket.createBucket(() => {
+            var params = {
+                Bucket: bucketName,
+                Key: fileName,
+                Body: data,
+                ACL: 'public-read'
+            }
+            s3Bucket.upload(params, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data.Location)
+                }
+            });
+        });
+    });
 }
->>>>>>> f1bdaf7d25a78d6b9dff07d84bb15e7829f08adc
