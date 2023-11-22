@@ -17,7 +17,7 @@ const Expense = require('./models/expense');
 const User = require('./models/user');
 const Order = require('./models/orders');
 const forgotPasswordRequests = require('./models/forgotPasswordRequests');
-
+// console.log('dev mode is:', process.env.NODE_ENV);
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(cors());

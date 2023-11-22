@@ -3,11 +3,12 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const con = require('../util/database');
+const dotenv = require('dotenv').config();
 
 
 
 function generateAccessToken(id, name) {
-    return jwt.sign({ userId: id, userName: name }, 'h31k2h128dqdhdia')
+    return jwt.sign({ userId: id, userName: name }, process.env.TOKEN_SECRET)
 }
 
 
@@ -43,7 +44,7 @@ exports.fetchAllExpenses = (req, res) => {
 }
 
 exports.generateAccessToken = (id, name, ispremiumuser) => {
-    return jwt.sign({ userId: id, name: name, ispremiumuser }, 'h31k2h128dqdhdia');
+    return jwt.sign({ userId: id, name: name, ispremiumuser }, process.env.TOKEN_SECRET);
 }
 
 exports.addExpense = async (req, res, next) => {

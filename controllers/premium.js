@@ -4,11 +4,13 @@ const Order = require('../models/orders');
 const Expense = require('../models/expense');
 const expense = require('./expense');
 const sequelize = require('../util/database');
+const dotenv = require('dotenv').config();
 
 exports.buyPremium = (req, res) => {
+    console.log('razorpay credentials are:', process.env.RAZORPAY_KEY_ID, process.env.RAZORPAY_KEY_SECRET)
     var rzp = new Razorpay({
-        key_id: 'rzp_test_aHwjaNMY3niUua',
-        key_secret: 'zEplOBOcsmItP4xGc1Qo8tJJ'
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
     });
     const amount = 2500;
 

@@ -1,9 +1,9 @@
+const dotenv = require('dotenv').config();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
 const Expense = require('../models/expense');
-
 
 exports.signUp = (req, res) => {
     console.log(req.body);
@@ -69,7 +69,7 @@ exports.login = (req, res, next) => {
 }
 
 function generateAccessToken(id, name) {
-    return jwt.sign({ userId: id, userName: name }, 'h31k2h128dqdhdia')
+    return jwt.sign({ userId: id, userName: name }, process.env.TOKEN_SECRET)
 }
 
 exports.downloadExpenses = async (req, res) => {
@@ -90,11 +90,13 @@ exports.downloadExpenses = async (req, res) => {
 function uploadToS3(data, fileName) {
     return new Promise((resolve, reject) => {
         const bucketName = 'exp70188';
-        const IAM_USER_KEY = 'AKIAVMPMOSEFOCDMAB77';
-        const IAM_SECRET_KEY = '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';
+        const IAM_USER_KEY = process.env.AWS_S3_ACCESS_KEY;
+        const IAM_SECRET_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY;
+
+        console.log('AWS ACCESS KEY AND SECRET KEY ARE:', IAM_USER_KEY, IAM_SECRET_KEY);
         let s3Bucket = new AWS.S3({
             accessKeyId: IAM_USER_KEY,
-            secretAccessKey: IAM_SECRET_KEY,
+            secretAccessKey: IAM_SECRET_KEY
         })
         let fileURL = '';
         s3Bucket.createBucket(() => {

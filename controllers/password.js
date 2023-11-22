@@ -1,10 +1,10 @@
 const uuid = require('uuid');
 const bcrypt = require('bcrypt');
-const dotenv = require('dotenv').config();
 const ForgotPassword = require('../models/forgotPasswordRequests');
 const User = require('../models/user');
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 const con = require('../util/database');
+const dotenv = require('dotenv').config();
 
 // const htmlContent = require('../models/templates.js');
 
@@ -13,6 +13,7 @@ const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.EMAIL_API_KEY;
 
 exports.forgotPassword = async (req, res) => {
+    console.log('email api key is: ',process.env.EMAIL_API_KEY);
     User
         .findAll({ where: { email: req.body.email } })
         .then(async (user) => {
@@ -25,8 +26,9 @@ exports.forgotPassword = async (req, res) => {
                 .then(async (forgotPasswordRequest) => {
                     await t.commit();
                     const id = forgotPasswordRequest.id;
-                    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+                    console.log('forgot password request ID is', req.body.email)
 
+                    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
                     const sender = {
                         email: "tridev50423@gmail.com",
                         name: "Tri Dev",
@@ -47,10 +49,10 @@ exports.forgotPassword = async (req, res) => {
                             htmlContent: `<a href="http://localhost:3000/resetPassword/${id}">Reset password</a>`,
                         }).then((data) => {
                             res.json(data);
-                        }).catch(err => console.log(err));
+                        }).catch(err => console.log('catch after then error: ', err));
 
                     } catch (error) {
-                        console.log(error);
+                        console.log('catch error is: ', error);
                         res.send(error);
                     }
                 })
@@ -65,7 +67,6 @@ exports.forgotPassword = async (req, res) => {
 }
 
 exports.resetPassword = (req, res) => {
-    // const requestId = req;
     console.log('requestId is:', req.params.id);
     const id = req.params.id;
     ForgotPassword.findOne({ where: { id } })
