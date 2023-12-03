@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
 const Expense = require('../models/expense');
-
+require('aws-sdk/lib/maintenance_mode_message').suppress = true
 exports.signUp = (req, res) => {
     console.log(req.body);
     const user = req.body;
