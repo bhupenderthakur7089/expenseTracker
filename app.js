@@ -1,5 +1,5 @@
 const express = require('express');
-const https = require('https');
+const http = require('http');
 const cors = require('cors');
 const path = require('path');
 const con = require('./util/database');
@@ -41,7 +41,7 @@ app.use(expenseRoute);
 app.use(premiumRoute);
 
 app.use((req, res) => {
-    console.log('urll', req.url);
+    console.log('url is', req.url);
     res.sendFile(path.join(__dirname, `${req.url}`));
 })
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
