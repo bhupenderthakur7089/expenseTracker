@@ -42,7 +42,7 @@ app.use(premiumRoute);
 
 app.use((req, res) => {
     console.log('urll', req.url);
-    res.sendFile(path.join(__dirname, 'login.html'));
+    res.sendFile(path.join(__dirname, `${req.url}`));
 })
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Expense);
