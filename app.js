@@ -39,8 +39,11 @@ app.use(user);
 app.use(password);
 app.use(expenseRoute);
 app.use(premiumRoute);
-app.use(errorController.get404);
 
+app.use((req, res) => {
+    console.log('urll', req.url);
+    res.sendFile(path.join(__dirname, 'login.html'));
+})
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Expense);
 

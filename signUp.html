@@ -21,7 +21,7 @@
             <h3 class="navbar-brand">Expense Tracker App</h3>
         </div>
         <ul class="navbar-nav">
-           <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link" href="login.html">Login</a>
             </li>
             <li class="nav-item">
@@ -71,7 +71,7 @@
                     password
                 }
                 axios
-                    .post("http://localhost:3000/signUp", user)
+                    .post("http://13.233.183.199:3000/signUp", user)
                     .then(res => {
                         console.log(res.data.userExists);
                         if (res.data.userExists == true) {
