@@ -71,7 +71,7 @@
                     password
                 }
                 axios
-                    .post("http://localhost:3000/signUp", user)
+                    .post("http://13.233.183.199:3000/signUp", user)
                     .then(res => {
                         console.log(res.data.userExists);
                         if (res.data.userExists == true) {

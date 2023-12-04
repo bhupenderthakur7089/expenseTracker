@@ -46,7 +46,7 @@ exports.forgotPassword = async (req, res) => {
                             subject: "Test Email from Brevo",
                             textContent: "Test Email",
                             text: 'and easy to do anywhere, even with Node.js',
-                            htmlContent: `<a href="http://localhost:3000/resetPassword/${id}">Reset password</a>`,
+                            htmlContent: `<a href="http://13.233.183.199:3000/resetPassword/${id}">Reset password</a>`,
                         }).then((data) => {
                             res.json(data);
                         }).catch(err => console.log('catch after then error: ', err));

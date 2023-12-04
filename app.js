@@ -20,8 +20,8 @@ const Expense = require('./models/expense');
 const User = require('./models/user');
 const Order = require('./models/orders');
 const forgotPasswordRequests = require('./models/forgotPasswordRequests');
-app.set('views', 'views');
-
+// app.set('views', 'views');
+// app.set('view engine', 'ejs');
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname, 'access.log'),
     { flags: 'a' }
@@ -39,7 +39,7 @@ app.use(user);
 app.use(password);
 app.use(expenseRoute);
 app.use(premiumRoute);
-app.use(errorController.get404);
+// app.use(errorController.get404);
 
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Expense);
