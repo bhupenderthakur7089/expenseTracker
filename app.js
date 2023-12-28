@@ -20,8 +20,6 @@ const Expense = require('./models/expense');
 const User = require('./models/user');
 const Order = require('./models/orders');
 const forgotPasswordRequests = require('./models/forgotPasswordRequests');
-// app.set('views', 'views');
-// app.set('view engine', 'ejs');
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname, 'access.log'),
     { flags: 'a' }
@@ -41,9 +39,10 @@ app.use(expenseRoute);
 app.use(premiumRoute);
 
 app.use((req, res) => {
-    console.log('url is', req.url);
+    console.log('RL Requested is: ',req.url);
     res.sendFile(path.join(__dirname, `${req.url}`));
 })
+
 Expense.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Expense);
 
@@ -52,6 +51,7 @@ User.hasMany(Order);
 
 forgotPasswordRequests.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(forgotPasswordRequests);
+
 con
     .sync()
     .then((result) => {
